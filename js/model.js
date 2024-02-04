@@ -64,9 +64,11 @@ function setData(newData) {
 		if (data.payment < data.getMinPayment()) {
 			data.payment = data.getMinPayment();
 		}
+
+		data.paymentPercents = (data.payment * 100) / newData.cost / 100;
 	}
 
-    if (newData.onUpdate === 'inputPayment') {
+	if (newData.onUpdate === 'inputPayment') {
 		// Пересчитываем %
 		newData.paymentPercents = (newData.payment * 100) / data.cost / 100;
 
@@ -77,7 +79,7 @@ function setData(newData) {
 		}
 
 		// Если проценты меньше 90%
-        if (newData.paymentPercents < data.minPaymentPercents) {
+		if (newData.paymentPercents < data.minPaymentPercents) {
 			newData.paymentPercents = data.minPaymentPercents;
 			newData.payment = data.cost * data.minPaymentPercents;
 		}
@@ -86,16 +88,16 @@ function setData(newData) {
 	if (newData.onUpdate === 'paymentSlider') {
 		newData.paymentPercents = newData.paymentPercents / 100;
 		data.payment = data.cost * newData.paymentPercents;
-    }
+	}
 
-    if (newData.onUpdate === 'inputTime') {
-        if (newData.time > data.maxYear) {
-            newData.time = data.maxYear;
-        }
+	if (newData.onUpdate === 'inputTime') {
+		if (newData.time > data.maxYear) {
+			newData.time = data.maxYear;
+		}
 
-        if (newData.time < data.minYear) {
-            newData.time = data.minYear;
-        }
+		if (newData.time < data.minYear) {
+			newData.time = data.minYear;
+		}
 	}
 
 	data = {
@@ -104,30 +106,18 @@ function setData(newData) {
 	};
 
 	// Рассчет ипотеки
-	const months = data.time * 12;
-	console.log('months', months);
-
-	const totalAmount = data.cost - data.payment;
-	console.log('totalAmount', totalAmount);
-
-	const monthRate = data.selectedProgram / 12;
-	console.log('monthRate', monthRate);
-
-	const generalRate = (1 + monthRate) ** months;
-	console.log('generalRate', generalRate);
-
-	const monthPayment = (totalAmount * monthRate * generalRate) / (generalRate - 1);
-	console.log('monthPayment', monthPayment);
-
-	const overPayment = monthPayment * months - totalAmount;
-	console.log('overPayment', overPayment);
-
+    const months = data.time * 12;
+    const totalAmount = data.cost - data.payment;
+    const monthRate = data.selectedProgram / 12;
+    const generalRate = (1 + monthRate) ** months;
+    const monthPayment = (totalAmount * monthRate * generalRate) / (generalRate - 1);
+    const overPayment = monthPayment * months - totalAmount;
 
 	results = {
-		rate: data.selectedProgram,
-		totalAmount,
-		monthPayment,
-		overPayment,
+        rate: data.selectedProgram,
+        totalAmount,
+        monthPayment,
+        overPayment
 	};
 
 	console.log('Updated data', data);
